@@ -40,6 +40,6 @@ wsl install -d ubuntu
 ```
 
 ```
-curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
 ```
 
