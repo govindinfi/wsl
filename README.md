@@ -54,13 +54,28 @@ wsl install -d ubuntu
 wsl --set-default-verion 2
 ```
 ```
+## Download CentOS 8 Stream Linux for WSL
+
 curl -sSL https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip -o CentOS8-stream.zip
 ```
+
+![unzip](https://www.how2shout.com/linux/wp-content/uploads/2021/01/Extract-roofts-linux-files-windows-10.jpg)
+
+Run Installer CentOS 8 Stream for Windows 10
+
+![run](https://www.how2shout.com/linux/wp-content/uploads/2021/01/CentOS-8-Stream-Linux-executable-WSL-file.jpg)
+![done](https://www.how2shout.com/linux/wp-content/uploads/2021/01/CentOS8-stream_installing-WSL.jpg)
+
+- Now, again inside the same folder, run the same CentOS executable however this time you will get the command-line interface with the root user. Start using your CentOS 8 Stream WSL.
+
+
 
 ## Setup WSL for Web Application
 
 ```
 curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
 ```
+
+
 
 Thank You!
