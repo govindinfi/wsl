@@ -9,6 +9,10 @@ WSL Setup Script for Ubuntu/Centos/Rhel
 wsl --install
 ```
 
+```
+wsl --update
+```
+
 ### Install WSL on previous versions of Windows Server
 To install WSL on Windows Server 2019 (version 1709+), you can follow the manual install steps below.
 
@@ -17,6 +21,8 @@ To install WSL on Windows Server 2019 (version 1709+), you can follow the manual
 ```
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 ```
+
+## Manual installation steps for older versions of WSL
 
 #### Enable the Windows Subsystem for Linux
 
