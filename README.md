@@ -5,7 +5,7 @@ WSL Setup Script for Ubuntu/Centos/Rhel
 
 ### Install WSL on Windows Server 2022
 
-Follow [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
+Follow [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install){:target="_blank"}
 
 ```
 wsl --install
