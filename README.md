@@ -76,6 +76,6 @@ Run Installer CentOS 8 Stream for Windows 10
 curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
 ```
 
-
+![install](https://raw.githubusercontent.com/govindinfi/wsl/main/Screenshot%202022-08-17%20193738.png)
 
 Thank You!
