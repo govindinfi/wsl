@@ -244,6 +244,8 @@ do_install() {
 				$sh_c 'apt-get update -y >/dev/null'
 				$sh_c "apt-get clean"
             )
+			echo_run_as_nonroot
+			exit 0
 			;;
 		centos|fedora|rhel)
 		
@@ -311,6 +313,8 @@ do_install() {
 					$sh_c "$pkg_manager clean all"
 				fi
 			)
+			echo_run_as_nonroot
+			exit 0
 			;;
 			
 		*)
@@ -332,7 +336,6 @@ do_install() {
 }
 
 # half the file during "curl | sh"
-echo_run_as_nonroot
-#do_install
+do_install
 
 
