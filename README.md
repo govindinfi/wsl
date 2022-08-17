@@ -47,7 +47,20 @@ wsl --set-default-verion 1
 wsl install -d ubuntu 
 ```
 
+
+## Install CentOS8-steam with wsl command
+
+```
+wsl --set-default-verion 2
+```
+```
+curl -sSL https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip -o CentOS8-stream.zip
+```
+
+## Setup WSL for Web Application
+
 ```
 curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
 ```
 
+Thank You!
