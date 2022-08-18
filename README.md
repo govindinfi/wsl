@@ -8,22 +8,20 @@
 
 Follow [Install Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
 
+### Enable the Windows Subsystem for Linux
+
+### Install WSL on previous versions of Windows Server
+- To install WSL on Windows Server 2019 (version 1709+), you can follow the manual install steps below.
+
 ```
-wsl --install
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
 ```
 
 ```
 wsl --update
 ```
 
-### Install WSL on previous versions of Windows Server
-To install WSL on Windows Server 2019 (version 1709+), you can follow the manual install steps below.
-
-### Enable the Windows Subsystem for Linux
-
-```
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-```
+----
 
 ## Manual installation steps for older versions of WSL
 
@@ -38,6 +36,7 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 ```
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
+----
 
 ## Install Ubuntu with wsl command 
 
@@ -51,7 +50,7 @@ wsl --install -d ubuntu
 ## Setup WSL for Web Application
 
 ```
-curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | bash
 ```
 
 
@@ -88,7 +87,7 @@ Run Installer CentOS 8 Stream for Windows 10
 ## Setup WSL for Web Application
 
 ```
-curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | bash
 ```
 
 ![install](https://raw.githubusercontent.com/govindinfi/wsl/main/Screenshot%202022-08-17%20193738.png)
