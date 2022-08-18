@@ -101,10 +101,11 @@ Note: - Rabbitmq Management enable command
 sudo rabbitmq-plugins enable rabbitmq_management
 ```
 
-URL = http://localhost:15672/
+- URL = http://localhost:15672/
 
-UserName: guest
-PassWord: guest
+- UserName: `guest`
+
+- PassWord: `guest`
 
 ----
 
