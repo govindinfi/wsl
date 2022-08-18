@@ -70,7 +70,14 @@ echo_run_as_nonroot() {
 		;;
 	esac
 	$sh_c "chmod +x /usr/local/bin/run"
-	SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
+
+	lsb_dist=$( get_distribution )
+	lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
+
+	if [ "$lsb_dist" != "ubuntu" ]; then
+		SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
+	fi
+	
 	$sh_c "run"
 }
 
