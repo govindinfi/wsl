@@ -45,7 +45,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 wsl --set-default-verion 2
 ```
 ```
-wsl install -d ubuntu 
+wsl --install -d ubuntu 
 ```
 
 ## Setup WSL for Web Application
