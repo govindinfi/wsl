@@ -238,9 +238,9 @@ do_install() {
 				
 				if [[ -z $(php -m | grep mcrypt) ]]; then
 					$sh_c "printf "\n" | pecl install mcrypt"
-					echo "extension=mcrypt.so" >> /etc/php/7.4/apache2/php.ini
+					$sh_c "echo "extension=mcrypt.so" >> /etc/php/7.4/apache2/php.ini"
 				fi
-				
+
 				$sh_c "pear install Net_Nmap"
 				$sh_c "apt-get install rabbitmq-server erlang mongodb -y"
 				$sh_c "apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'"
