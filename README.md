@@ -42,18 +42,21 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 ## Install Ubuntu with wsl command 
 
 ```
-wsl --set-default-verion 1
+wsl --set-default-verion 2
 ```
 ```
 wsl install -d ubuntu 
 ```
 
-
-## Install CentOS8-steam with wsl command
+## Setup WSL for Web Application
 
 ```
-wsl --set-default-verion 2
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
 ```
+
+
+---- 
+
 
 
 # For CentOS8-steam Steps
