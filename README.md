@@ -50,7 +50,7 @@ wsl --install -d ubuntu
 ## Setup WSL for Web Application
 
 ```
-curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | bash
 ```
 
 
@@ -87,7 +87,7 @@ Run Installer CentOS 8 Stream for Windows 10
 ## Setup WSL for Web Application
 
 ```
-curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | sh
+curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | bash
 ```
 
 ![install](https://raw.githubusercontent.com/govindinfi/wsl/main/Screenshot%202022-08-17%20193738.png)
