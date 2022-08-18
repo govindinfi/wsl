@@ -53,9 +53,12 @@ wsl install -d ubuntu
 ```
 wsl --set-default-verion 2
 ```
-```
+
 ## Download CentOS 8 Stream Linux for WSL
 
+<a id="raw-url" href="https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip">Download Zip FILE</a>
+
+```
 curl -sSL https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip -o CentOS8-stream.zip
 ```
 
