@@ -237,11 +237,11 @@ do_install() {
 				$sh_c "pecl channel-update pear.php.net"
 				
 				if [[ -z $(php -m | grep mcrypt) ]]; then
-					$sh_c "printf "\n" | pecl install mcrypt"
+					$sh_c "printf "\n" | pecl install -f mcrypt"
 					$sh_c "echo "extension=mcrypt.so" >> /etc/php/7.4/apache2/php.ini"
 				fi
 
-				$sh_c "pear install Net_Nmap"
+				$sh_c "pear install -f Net_Nmap"
 				$sh_c "apt-get install rabbitmq-server erlang mongodb -y"
 				$sh_c "apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'"
 				$sh_c "add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.9/ubuntu focal main'"
