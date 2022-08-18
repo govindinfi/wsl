@@ -52,6 +52,7 @@ echo_run_as_nonroot() {
 			if is_wsl; then
 				echo "WSL DETECTED: We recommend using httpd for Windows."
 				echo "#!/bin/bash" > $run
+				echo "" >> $run
 				echo "ssh-keygen -A" >> $run
 				echo "cd /etc/ssh/" >> $run
 				echo "/usr/sbin/sshd" >> $run
@@ -134,11 +135,12 @@ do_install() {
 	
 	user="$(id -un 2>/dev/null || true)"
 
-
 	sh_c='sh -c'
 	if [ "$user" != 'root' ]; then
 		if command_exists sudo; then
 			sh_c='sudo -E sh -c'
+		elif [ "$user" = 'root' ]; then
+			sh_c=''
 		elif command_exists su; then
 			sh_c='su -c'
 		else
