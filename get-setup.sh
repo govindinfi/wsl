@@ -133,6 +133,10 @@ check_forked() {
 do_install() {
 	echo "# Executing infiworx install script."
 	
+	if [ "$lsb_dist" = "ubuntu" ]
+		set -x 
+	fi
+
 	user="$(id -un 2>/dev/null || true)"
 
 	sh_c='sh -c'
