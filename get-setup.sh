@@ -35,11 +35,11 @@ echo_run_as_nonroot() {
 		ubuntu|debian|raspbian)
 			if is_wsl; then
 				echo "WSL DETECTED: We recommend using apache2 for Windows."	
-				$sh_c "echo "#!/bin/sh" > $run"
-				$sh_c "echo "sudo service apache2 start" >> $run"
-				$sh_c "echo "sudo service mariadb start" >> $run"
-				$sh_c "echo "sudo service rabbitmq-server start" >> $run"
-				$sh_c "echo "sudo service mongodb start" >> $run"
+				$sh_c "echo '#!/bin/sh' > $run"
+				$sh_c "echo 'sudo service apache2 start' >> $run"
+				$sh_c "echo 'sudo service mariadb start' >> $run"
+				$sh_c "echo 'sudo service rabbitmq-server start' >> $run"
+				$sh_c "echo 'sudo service mongodb start' >> $run"
 			else 
 				service="systemctl enable --now"
 				$sh_c "sudo $service apache2"
