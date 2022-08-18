@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ "$lsb_dist" = "ubuntu" ]
-		set -x 
+if [ "$lsb_dist" = "ubuntu" ]; then
+	set -x 
 else
 	set -o pipefail
 fi
