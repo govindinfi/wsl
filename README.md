@@ -92,4 +92,20 @@ curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | b
 
 ![install](https://raw.githubusercontent.com/govindinfi/wsl/main/Screenshot%202022-08-17%20193738.png)
 
+
+----
+
+Note: - Rabbitmq Management enable command 
+
+```
+sudo rabbitmq-plugins enable rabbitmq_management
+```
+
+URL = http://localhost:15672/
+
+UserName: guest
+PassWord: guest
+
+----
+
 Thank You!
