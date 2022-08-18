@@ -79,10 +79,10 @@ echo_run_as_nonroot() {
 	fi
 
 	if [ ! -e "/mnt/c/html" ]; then
-		cd /var/www/
-		rm -rf html
-		install -d /mnt/c/html
-		ln -s /mnt/c/html html
+		$sh_c "cd /var/www/"
+		$sh_c "rm -rf html"
+		$sh_c "install -d /mnt/c/html"
+		$sh_c "ln -s /mnt/c/html html"
 	fi
 
 	$sh_c "run"
