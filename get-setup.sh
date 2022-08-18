@@ -231,17 +231,17 @@ do_install() {
 			fi
 			(
 				$sh_c 'apt-get update -y'
-				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y  $pre_reqs "
-				$sh_c "apt-get install apache2 nmap -y  "
-				$sh_c "apt-get install php php-{cli,pear,dev,common,gd,gmp,json,ldap,mbstring,mysqlnd,opcache,pdo,pear,ssh2,snmp,xml,zip,mongodb,amqp,mcrypt} -y  "
-				$sh_c "pecl channel-update pear.php.net "
-				$sh_c "pear install Net_Nmap "
+				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y  $pre_reqs"
+				$sh_c "apt-get install apache2 nmap -y"
+				$sh_c "apt-get install php php-{cli,pear,dev,common,gd,gmp,json,ldap,mbstring,mysqlnd,opcache,pdo,pear,ssh2,snmp,xml,zip,mongodb,amqp} -y"
+				$sh_c "pecl channel-update pear.php.net"
+				$sh_c "pear install Net_Nmap"
 				$sh_c "apt-get install rabbitmq-server erlang mongodb -y"
 				$sh_c "apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'"
 				$sh_c "add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.9/ubuntu focal main'"
-				$sh_c "apt update -y  "
-				$sh_c "apt-get install mariadb-server mariadb-client -y  "
-				$sh_c 'apt-get update -y '
+				$sh_c "apt update -y"
+				$sh_c "apt-get install mariadb-server mariadb-client -y"
+				$sh_c 'apt-get update -y'
 				$sh_c "apt-get clean"
             )
 			echo_run_as_nonroot
