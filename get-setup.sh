@@ -77,8 +77,19 @@ echo_run_as_nonroot() {
 	if [ "$lsb_dist" != "ubuntu" ]; then
 		SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
 	fi
-	
+
+	if [ ! -e "/mnt/c/html" ]; then
+		cd /var/www/
+		rm -rf html
+		install -d /mnt/c/html
+		ln -s /mnt/c/html html
+	fi
+
 	$sh_c "run"
+
+	echo "Installation has been successfully Done"
+	echo "clone code into C:\html\ directory"
+
 }
 
 
