@@ -56,11 +56,9 @@ wsl --set-default-verion 2
 
 ## Download CentOS 8 Stream Linux for WSL
 
-<a id="raw-url" href="https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip">Download Zip FILE</a>
+<a id="raw-url" href="https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip">Download CentOS 8 Stream Zip Package</a>
 
-```
-curl -sSL https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip -o CentOS8-stream.zip
-```
+- Unzip CentOS8-stream.zip 
 
 ![unzip](https://raw.githubusercontent.com/govindinfi/wsl/main/4.jpg)
 
