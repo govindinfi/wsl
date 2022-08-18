@@ -69,7 +69,7 @@ echo_run_as_nonroot() {
 			 fi
 		;;
 	esac
-	chmod +x /usr/local/bin/run
+	$sh_c "chmod +x /usr/local/bin/run"
 	SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
 	$sh_c "run"
 }
