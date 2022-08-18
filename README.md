@@ -1,5 +1,6 @@
-# wsl
-WSL Setup Script for Ubuntu/Centos/Rhel
+# WSl Installation Steps for Windows 10 
+
+- WSL Setup Script for Ubuntu/Centos/Rhel.
 
 ## Setup
 
@@ -54,6 +55,17 @@ wsl install -d ubuntu
 wsl --set-default-verion 2
 ```
 
+
+# For CentOS8-steam Steps
+
+## Install CentOS8-steam with wsl command 
+
+- Set wsl version 1 for Centos
+
+```
+wsl --set-default-verion 1
+```
+
 ## Download CentOS 8 Stream Linux for WSL
 
 <a id="raw-url" href="https://github.com/mishamosher/CentOS-WSL/releases/download/8-stream-20201019/CentOS8-stream.zip">Download CentOS 8 Stream Zip Package</a>
@@ -68,7 +80,6 @@ Run Installer CentOS 8 Stream for Windows 10
 ![done](https://raw.githubusercontent.com/govindinfi/wsl/main/1.jpg)
 
 - Now, again inside the same folder, run the same CentOS executable however this time you will get the command-line interface with the root user. Start using your CentOS 8 Stream WSL.
-
 
 
 ## Setup WSL for Web Application
