@@ -233,7 +233,7 @@ do_install() {
 				$sh_c 'apt-get update -y'
 				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y  $pre_reqs"
 				$sh_c "apt-get install apache2 nmap -y"
-				$sh_c "apt-get install php php7.4-common php-7.4-mysql php7.4-opcache php-cli php-pear php-dev php-gd php-gmp php-json php-ldap php-mbstring php-pear php-ssh2 php-snmp php-xml php-zip php-mongodb php-amqp php-mcrypt -y"
+				$sh_c "apt-get install php php7.4-common php7.4-mysql php7.4-opcache php-cli php-pear php-dev php-gd php-gmp php-json php-ldap php-mbstring php-pear php-ssh2 php-snmp php-xml php-zip php-mongodb php-amqp php-mcrypt -y"
 				$sh_c "pecl channel-update pear.php.net"
 				$sh_c "pear install Net_Nmap"
 				$sh_c "apt-get install rabbitmq-server erlang mongodb -y"
