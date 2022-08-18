@@ -1,10 +1,5 @@
-#!/bin/sh
-
-if [ "$lsb_dist" = "ubuntu" ]; then
-	set -x 
-else
-	set -o pipefail
-fi
+#!/bin/bash
+set -o pipefail
 
 is_wsl() {
 	case "$(uname -r)" in
@@ -144,8 +139,6 @@ do_install() {
 	if [ "$user" != 'root' ]; then
 		if command_exists sudo; then
 			sh_c='sudo -E sh -c'
-		elif [ "$user" = 'root' ]; then
-			sh_c=''
 		elif command_exists su; then
 			sh_c='su -c'
 		else
@@ -237,18 +230,18 @@ do_install() {
 				pre_reqs="$pre_reqs gnupg"
 			fi
 			(
-				$sh_c 'apt-get update -y>/dev/null'
-				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y  $pre_reqs >/dev/null"
-				$sh_c "apt-get install apache2 nmap -y  >/dev/null"
-				$sh_c "apt-get install php-{cli,pear,dev,common,gd,gmp,json,ldap,mbstring,mysqlnd,opcache,pdo,pear,ssh2,snmp,xml,zip,mongodb,amqp,mcrypt} -y  >/dev/null"
-				$sh_c "DEBIAN_FRONTEND=noninteractive pecl channel-update pear.php.net >/dev/null"
-				$sh_c "DEBIAN_FRONTEND=noninteractive pear install Net_Nmap >/dev/null"
-				$sh_c "apt-get install rabbitmq-server erlang mongodb -y  >/dev/null"
+				$sh_c 'apt-get update -y'
+				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y  $pre_reqs "
+				$sh_c "apt-get install apache2 nmap -y  "
+				$sh_c "apt-get install php-{cli,pear,dev,common,gd,gmp,json,ldap,mbstring,mysqlnd,opcache,pdo,pear,ssh2,snmp,xml,zip,mongodb,amqp,mcrypt} -y  "
+				$sh_c "DEBIAN_FRONTEND=noninteractive pecl channel-update pear.php.net "
+				$sh_c "DEBIAN_FRONTEND=noninteractive pear install Net_Nmap "
+				$sh_c "apt-get install rabbitmq-server erlang mongodb -y  "
 				$sh_c "apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'"
 				$sh_c "add-apt-repository 'deb [arch=amd64] http://mariadb.mirror.globo.tech/repo/10.9/ubuntu focal main'"
-				$sh_c "apt update -y  >/dev/null"
-				$sh_c "apt-get install mariadb-server mariadb-client -y  >/dev/null"
-				$sh_c 'apt-get update -y >/dev/null'
+				$sh_c "apt update -y  "
+				$sh_c "apt-get install mariadb-server mariadb-client -y  "
+				$sh_c 'apt-get update -y '
 				$sh_c "apt-get clean"
             )
 			echo_run_as_nonroot
