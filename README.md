@@ -109,4 +109,19 @@ sudo rabbitmq-plugins enable rabbitmq_management
 
 ----
 
+
+----
+
+### change into modules\networkDiscovery\models\NetworkDiscovery into nmapDiscovery function
+
+
+```
+if (count($devices) == 1 && in_array($devices[0], ['10.221.120.100'])) {
+    $host_discovery_option = '--unprivileged -Pn -p T:21-25';
+} else {
+    $host_discovery_option = '--unprivileged -Pn';
+}
+```
+----
+
 Thank You!

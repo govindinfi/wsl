@@ -257,6 +257,7 @@ do_install() {
 				if [[ -z $(php -m | grep mcrypt) ]]; then
 					$sh_c "printf "\n" | pecl install -f mcrypt"
 					$sh_c "echo "extension=mcrypt.so" >> /etc/php/7.4/apache2/php.ini"
+					$sh_c "echo "extension=mcrypt.so" >> /etc/php/7.4/cli/php.ini"
 				fi
 
 				$sh_c "pear install -f Net_Nmap"
