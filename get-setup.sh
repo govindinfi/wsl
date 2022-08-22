@@ -56,10 +56,11 @@ echo_run_as_nonroot() {
 				echo "ssh-keygen -A" >> $run
 				echo "cd /etc/ssh/" >> $run
 				echo "/usr/sbin/sshd" >> $run
+				echo "cd /etc/httpd/" >> $run
+				echo "install -d /run/httpd/" >> $run
+				echo "/usr/sbin/httpd" >> $run
+				echo "cd /var/www/html/" >> $run
 
-				cd /etc/httpd/
-				install -d /run/httpd/
-				/usr/sbin/httpd
 			else
 				service="systemctl enable --now"
 				sudo $service apache2
@@ -312,7 +313,7 @@ do_install() {
 					$sh_c "$pkg_manager autoremove -y"
 					$sh_c "$pkg_manager -y install nmap git composer mariadb"
 					$sh_c 'pear channel-update pear.php.net'
-					$sh_c 'pear install Net_Nmap'
+					$sh_c 'pear install -f Net_Nmap'
 					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
 						$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
 						$sh_c "echo 'extension=ixed.7.4.lin' >> /etc/php.ini"
