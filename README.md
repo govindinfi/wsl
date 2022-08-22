@@ -41,10 +41,11 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 ## Install Ubuntu with wsl command 
 
 ```
-wsl --set-default-verion 2
-```
-```
 wsl --install -d ubuntu 
+```
+
+```
+wsl --set-default-verion ubuntu 2
 ```
 
 ## Setup WSL for Web Application
@@ -59,14 +60,6 @@ curl -sSL https://raw.githubusercontent.com/govindinfi/wsl/main/get-setup.sh | b
 
 
 # For CentOS8-steam Steps
-
-## Install CentOS8-steam with wsl command 
-
-- Set wsl version 1 for Centos
-
-```
-wsl --set-default-verion 1
-```
 
 ## Download CentOS 8 Stream Linux for WSL
 
@@ -83,6 +76,13 @@ Run Installer CentOS 8 Stream for Windows 10
 
 - Now, again inside the same folder, run the same CentOS executable however this time you will get the command-line interface with the root user. Start using your CentOS 8 Stream WSL.
 
+## Install CentOS8-steam with wsl command 
+
+- Set wsl version 1 for Centos
+
+```
+wsl --set-default-verion CentOS8-steam 1
+```
 
 ## Setup WSL for Web Application
 
