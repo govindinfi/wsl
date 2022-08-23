@@ -85,7 +85,7 @@ echo_run_as_nonroot() {
 	if [ "$lsb_dist" != "ubuntu" ]; then
 		SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
 	fi
-	
+
 	echo "Installation has been successfully Done"
 	echo "clone code into C:\html\ directory"
 
