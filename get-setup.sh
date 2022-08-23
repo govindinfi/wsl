@@ -61,12 +61,19 @@ echo_run_as_nonroot() {
 				echo "/usr/sbin/httpd" >> $run
 				echo "cd /var/www/html/" >> $run
 
+				if [ ! -e "/mnt/c/html" ]; then
+					$sh_c "cd /var/www/"
+					$sh_c "rm -rf html"
+					$sh_c "install -d /mnt/c/html"
+					$sh_c "ln -s /mnt/c/html html"
+				fi
+				if [ "$lsb_dist" != "ubuntu" ]; then
+					SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
+				fi
+				$sh_c "run"
 			else
 				service="systemctl enable --now"
-				sudo $service apache2
-				sudo $service mariadb
-				sudo $service rabbitmq-server
-				sudo $service mongodb
+				sudo $service httpd.service
 			 fi
 		;;
 	esac
@@ -78,16 +85,7 @@ echo_run_as_nonroot() {
 	if [ "$lsb_dist" != "ubuntu" ]; then
 		SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
 	fi
-
-	if [ ! -e "/mnt/c/html" ]; then
-		$sh_c "cd /var/www/"
-		$sh_c "rm -rf html"
-		$sh_c "install -d /mnt/c/html"
-		$sh_c "ln -s /mnt/c/html html"
-	fi
-
-	$sh_c "run"
-
+	
 	echo "Installation has been successfully Done"
 	echo "clone code into C:\html\ directory"
 
@@ -336,6 +334,9 @@ do_install() {
 						$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
 						$sh_c 'echo "extension=ixed.7.4.lin" | tee -a /etc/php.ini'
 					fi
+
+					$sh_c ""
+
 					$sh_c "$pkg_manager clean all"
 				fi
 			)
