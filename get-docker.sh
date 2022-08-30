@@ -207,6 +207,13 @@ echo_docker_as_nonroot() {
 	echo
 }
 
+docker-composer(){
+	echo "Running docker-composer"
+	$sh_c "curl -L "https://github.com/docker/compose/releases/download/v2.6.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose 2>/dev/null"
+    $sh_c "chmod +x /usr/local/bin/docker-compose"
+	$sh_c "ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose"
+}
+
 # Check if this is a forked Linux distro
 check_forked() {
 
@@ -453,6 +460,7 @@ do_install() {
 				fi
 			)
 			echo_docker_as_nonroot
+			docker-composer
 			exit 0
 			;;
 		centos|fedora|rhel)
@@ -465,7 +473,7 @@ do_install() {
 				echo "Error: Unable to curl repository file $yum_repo, is it valid?"
 				exit 1
 			fi
-			if [ "$lsb_dist" = "fedora" ] && [ "$dist_version" -gt 7 ]; then
+			if [ "$lsb_dist" = "fedora" ]; then
 				pkg_manager="dnf"
 				config_manager="dnf config-manager"
 				enable_channel_flag="--set-enabled"
@@ -540,13 +548,8 @@ do_install() {
 				fi
 				$sh_c "$pkg_manager install -y -q $pkgs"
 			)
-
-			( 
-				curl -L https://github.com/docker/compose/releases/download/v2.10.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose 2>/dev/null
-                chmod +x /usr/local/bin/docker-compose
-                ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-			)
 			echo_docker_as_nonroot
+			docker-composer
 			exit 0
 			;;
 		sles)
@@ -645,11 +648,6 @@ do_install() {
 			;;
 	esac
 	exit 1
-}
-
-docker-composer() {
-
-	
 }
 
 # wrapped up in a function so that we have some protection against only getting
