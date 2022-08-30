@@ -465,20 +465,13 @@ do_install() {
 				echo "Error: Unable to curl repository file $yum_repo, is it valid?"
 				exit 1
 			fi
-			if [ "$lsb_dist" = "fedora" ]; then
+			if [ "$lsb_dist" = "fedora" ] && [ "$dist_version" -gt 7 ]; then
 				pkg_manager="dnf"
 				config_manager="dnf config-manager"
 				enable_channel_flag="--set-enabled"
 				disable_channel_flag="--set-disabled"
 				pre_reqs="dnf-plugins-core"
 				pkg_suffix="fc$dist_version"
-			elif [ "$dist_version" -gt 7 ]; then
-				pkg_manager="dnf"
-				config_manager="dnf config-manager"
-				enable_channel_flag="--set-enabled"
-				disable_channel_flag="--set-disabled"
-				pre_reqs="dnf-plugins-core"
-				pkg_suffix="el$dist_version"
 			else
 				pkg_manager="yum"
 				config_manager="yum-config-manager"
