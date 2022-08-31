@@ -312,7 +312,7 @@ do_install() {
 					$sh_c "rm -f /var/lib/rpm/__db.*"
 					$sh_c "db_verify /var/lib/rpm/Packages"
 					$sh_c "rpm --rebuilddb"
-					$sh_c "$pkg_manager -y install nmap git composer mariadb snmp-tools"
+					$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
 					$sh_c 'pear channel-update pear.php.net'
 					$sh_c 'pear install -f Net_Nmap'
 					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
@@ -320,27 +320,29 @@ do_install() {
 						$sh_c "echo 'extension=ixed.7.4.lin' >> /etc/php.ini"
 					fi
 					$sh_c "$pkg_manager clean all"
+					$sh_c "$pkg_manager makecache"
 				else
 					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
 					$sh_c "$pkg_manager makecache"
+					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
 					$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
 					$sh_c "$pkg_manager install -y  $remi_repo"
 					$sh_c "$pkg_manager -y  module install php:remi-7.4"
 					$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
 					$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
 					$sh_c "$pkg_manager autoremove -y"
-					$sh_c "$pkg_manager -y install nmap git composer mariadb"
+					$sh_c "rm -f /var/lib/rpm/__db.*"
+					$sh_c "db_verify /var/lib/rpm/Packages"
+					$sh_c "rpm --rebuilddb"
+					$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
 					$sh_c "pear channel-update pear.php.net"
 					$sh_c "pear install Net_Nmap"
 					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then	
 						$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
 						$sh_c 'echo "extension=ixed.7.4.lin" | tee -a /etc/php.ini'
 					fi
-
-					$sh_c ""
-
 					$sh_c "$pkg_manager clean all"
+					$sh_c "$pkg_manager makecache"
 				fi
 			)
 			echo_run_as_nonroot
