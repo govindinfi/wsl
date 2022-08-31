@@ -309,6 +309,9 @@ do_install() {
 					$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
 					$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
 					$sh_c "$pkg_manager autoremove -y"
+					$sh_c "rm -f /var/lib/rpm/__db.*"
+					$sh_c "db_verify /var/lib/rpm/Packages"
+					$sh_c "rpm --rebuilddb"
 					$sh_c "$pkg_manager -y install nmap git composer mariadb"
 					$sh_c 'pear channel-update pear.php.net'
 					$sh_c 'pear install -f Net_Nmap'
