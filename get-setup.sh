@@ -301,8 +301,8 @@ do_install() {
 					echo "WSL DETECTED: Installing HTTPD for Windows."
 					
 					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
 					$sh_c "$pkg_manager makecache"
+					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
 					$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
 					$sh_c "$pkg_manager install -y  $remi_repo"
 					$sh_c "$pkg_manager -y  module install php:remi-7.4"
