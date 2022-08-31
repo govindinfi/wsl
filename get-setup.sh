@@ -312,7 +312,7 @@ do_install() {
 					$sh_c "rm -f /var/lib/rpm/__db.*"
 					$sh_c "db_verify /var/lib/rpm/Packages"
 					$sh_c "rpm --rebuilddb"
-					$sh_c "$pkg_manager -y install nmap git composer mariadb"
+					$sh_c "$pkg_manager -y install nmap git composer mariadb snmp-tools"
 					$sh_c 'pear channel-update pear.php.net'
 					$sh_c 'pear install -f Net_Nmap'
 					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
