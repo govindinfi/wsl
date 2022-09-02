@@ -92,7 +92,7 @@ echo_run_as_nonroot() {
 				service="systemctl enable --now"
 				sudo $service httpd.service
 				sudo $service mariadb.service
-				sudo $service monod.service
+				sudo $service mongod.service
 				sudo $service rabbitmq-server.service
 				rabbitmq-adduser
 				firewall
@@ -268,13 +268,10 @@ mariadb() {
 rabbitmq-server() {
 	echo "Installing RabbitMQ...."
 
-	curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.rpm.sh' | sudo -E bash
-	curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
-
+	curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.rpm.sh' | sudo -E bash >/dev/null
+	curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash >/dev/null
 	$sh_c "$pkg_manager install socat logrotate -y >/dev/null"
-
 	$sh_c "$pkg_manager -y install rabbitmq-server erlang >/dev/null"
-
 	rabbitmq-plugins enable rabbitmq_management
 }
 
