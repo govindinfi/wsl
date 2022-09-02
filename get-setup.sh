@@ -51,30 +51,44 @@ echo_run_as_nonroot() {
 		centos|rhel|sles)	
 			if is_wsl; then
 				echo "WSL DETECTED: We recommend using httpd for Windows."
-				echo "#!/bin/bash" > $run
-				echo "" >> $run
-				echo "ssh-keygen -A" >> $run
-				echo "cd /etc/ssh/" >> $run
-				echo "/usr/sbin/sshd" >> $run
-				echo "cd /etc/httpd/" >> $run
-				echo "install -d /run/httpd/" >> $run
-				echo "/usr/sbin/httpd" >> $run
-				echo "cd /var/www/html/" >> $run
+
+				cat <<-EOF > /usr/local/bin/run
+				#!/bin/bash
+				ssh-keygen -A
+				cd /etc/ssh/
+				/usr/sbin/sshd
+				cd /etc/httpd/
+				install -d /run/httpd/
+				/usr/sbin/httpd
+				cd /var/www/html/
+				EOF
 
 				if [ ! -e "/mnt/c/html" ]; then
+
+					$sh_c "install -d /mnt/c/html"
+				fi
+				if [ ! -h "/var/www/html" ]; then
 					$sh_c "cd /var/www/"
 					$sh_c "rm -rf html"
-					$sh_c "install -d /mnt/c/html"
 					$sh_c "ln -s /mnt/c/html html"
 				fi
+
 				if [ "$lsb_dist" != "ubuntu" ]; then
 					SSL=$(curl -SL https://github.com/govindinfi/ssl/blob/main/ssl2.sh?raw=true 2>/dev/null| bash)
 				fi
+				
 				$sh_c "run"
+
 			else
+
 				service="systemctl enable --now"
 				sudo $service httpd.service
-			 fi
+				sudo $service mariadb.service
+				sudo $service monod.service
+				sudo $service rabbitmq-server.service
+				rabbitmq-adduser
+				firewall
+			fi
 		;;
 	esac
 	$sh_c "chmod +x /usr/local/bin/run"
@@ -145,6 +159,121 @@ check_forked() {
 			fi
 		fi
 	fi
+}
+
+firewall() {
+	firewall-cmd --add-port=15672/tcp --permanent >/dev/null
+	firewall-cmd --add-port=5672/tcp --permanent >/dev/null
+	firewall-cmd --add-port=4369/tcp --permanent >/dev/null
+	firewall-cmd --add-service=http --permanent >/dev/null
+	firewall-cmd --add-service=https --permanent >/dev/null
+	firewall-cmd --add-service=mysql --permanent >/dev/null
+	firewall-cmd --add-service=mongodb --permanent >/dev/null
+	firewall-cmd --add-service=ftp --permanent >/dev/null
+	firewall-cmd --reload 
+}
+
+mongodb() {
+	echo "Installing Mongodb Server...."
+
+	cat <<-EOF > /etc/yum.repos.d/mongodb-org.repo
+		[mongodb-org]
+		name=MongoDB Repository
+		baseurl=https://repo.mongodb.org/yum/redhat/8Server/mongodb-org/5.0/x86_64/
+		gpgcheck=1
+		enabled=1
+		gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc	
+		EOF
+                        
+	$sh_c "$pkg_manager install mongodb-org -y >/dev/null"
+
+	sudo cat <<-EOF > /etc/systemd/system/disable-thp.service 
+		[Unit]
+		Description=Disable Transparent Huge Pages (THP)
+		After=sysinit.target local-fs.target
+		Before=mongod.service
+
+		[Service]
+		Type=oneshot
+		ExecStart=/bin/sh -c 'echo never | tee /sys/kernel/mm/transparent_hugepage/enabled > /dev/null'
+
+		[Install]
+		WantedBy=basic.target
+		EOF
+
+	$sh_c "systemctl daemon-reload"
+	$sh_c "systemctl start disable-thp.service"
+	$sh_c "cat /sys/kernel/mm/transparent_hugepage/enabled"
+
+	sudo cat <<-EOF > /etc/tuned/no-thp/tuned.conf
+	[main]
+	include=virtual-guest
+
+	[vm]
+	transparent_hugepages=never
+	EOF
+				
+	$sh_c "tuned-adm profile no-thp"
+	$sh_c "mongo --eval 'db.runCommand({ connectionStatus: 1 })'"
+}
+
+webserver() {
+	echo "Installing WebServer..."
+	$sh_c "$pkg_manager clean all"
+	$sh_c "$pkg_manager makecache"
+	$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
+	$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
+	$sh_c "$pkg_manager install -y  $remi_repo"
+	$sh_c "$pkg_manager -y  module install php:remi-7.4"
+	$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
+	$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
+	$sh_c "$pkg_manager autoremove -y"
+	$sh_c "rm -f /var/lib/rpm/__db.*"
+	$sh_c "db_verify /var/lib/rpm/Packages"
+	$sh_c "rpm --rebuilddb"
+	$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
+	$sh_c 'pear channel-update pear.php.net'
+	$sh_c 'pear install -f Net_Nmap'
+	if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
+		$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
+		$sh_c "echo 'extension=ixed.7.4.lin' >> /etc/php.ini"
+	fi
+}
+
+mariadb() {
+	echo "Installing Mongodb Server...."
+	cat <<-EOF > /etc/yum.repos.d/Mariadb.repo
+	# MariaDB 10.8 CentOS repository list - created 2022-08-02 09:12 UTC
+	# https://mariadb.org/download/
+	[mariadb]
+	name = MariaDB
+	baseurl = https://mariadb.mirror.digitalpacific.com.au/yum/10.8/centos8-amd64
+	module_hotfixes=1
+	gpgkey=https://mariadb.mirror.digitalpacific.com.au/yum/RPM-GPG-KEY-MariaDB
+	gpgcheck=1
+	EOF
+
+	$sh_c "$pkg_manager -y install epel-release" 
+	$sh_c "$pkg_manager -y install MariaDB-server MariaDB-client"
+}
+
+rabbitmq-server() {
+	echo "Installing RabbitMQ...."
+
+	curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.rpm.sh' | sudo -E bash
+	curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
+
+	$sh_c "$pkg_manager install socat logrotate -y"
+
+	$sh_c "$pkg_manager -y install rabbitmq-server erlang"
+
+	rabbitmq-plugins enable rabbitmq_management
+}
+
+rabbitmq-adduser() {
+	rabbitmqctl add_user admin Infi@123# >/dev/null
+	rabbitmqctl set_user_tags admin administrator >/dev/null
+	rabbitmqctl set_permissions -p / admin ".*" ".*" ".*" >/dev/null
 }
 
 do_install() {
@@ -299,50 +428,13 @@ do_install() {
 			(
 				if is_wsl; then
 					echo "WSL DETECTED: Installing HTTPD for Windows."
-					
-					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager makecache"
-					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
-					$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
-					$sh_c "$pkg_manager install -y  $remi_repo"
-					$sh_c "$pkg_manager -y  module install php:remi-7.4"
-					$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
-					$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
-					$sh_c "$pkg_manager autoremove -y"
-					$sh_c "rm -f /var/lib/rpm/__db.*"
-					$sh_c "db_verify /var/lib/rpm/Packages"
-					$sh_c "rpm --rebuilddb"
-					$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
-					$sh_c 'pear channel-update pear.php.net'
-					$sh_c 'pear install -f Net_Nmap'
-					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
-						$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
-						$sh_c "echo 'extension=ixed.7.4.lin' >> /etc/php.ini"
-					fi
-					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager makecache"
+					webserver
 				else
+					webserver
+					mongodb
+					mariadb
+					rabbitmq-server
 					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager makecache"
-					$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
-					$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
-					$sh_c "$pkg_manager install -y  $remi_repo"
-					$sh_c "$pkg_manager -y  module install php:remi-7.4"
-					$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
-					$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
-					$sh_c "$pkg_manager autoremove -y"
-					$sh_c "rm -f /var/lib/rpm/__db.*"
-					$sh_c "db_verify /var/lib/rpm/Packages"
-					$sh_c "rpm --rebuilddb"
-					$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
-					$sh_c "pear channel-update pear.php.net"
-					$sh_c "pear install Net_Nmap"
-					if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then	
-						$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
-						$sh_c 'echo "extension=ixed.7.4.lin" | tee -a /etc/php.ini'
-					fi
-					$sh_c "$pkg_manager clean all"
-					$sh_c "$pkg_manager makecache"
 				fi
 			)
 			echo_run_as_nonroot
