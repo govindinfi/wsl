@@ -187,7 +187,7 @@ mongodb() {
                         
 	$sh_c "$pkg_manager install mongodb-org -y >/dev/null"
 
-	sudo cat <<-EOF > /etc/systemd/system/disable-thp.service 
+	$sh_c cat <<-EOF > /etc/systemd/system/disable-thp.service 
 		[Unit]
 		Description=Disable Transparent Huge Pages (THP)
 		After=sysinit.target local-fs.target
@@ -205,7 +205,8 @@ mongodb() {
 	$sh_c "systemctl start disable-thp.service"
 	$sh_c "cat /sys/kernel/mm/transparent_hugepage/enabled"
 
-	sudo cat <<-EOF > /etc/tuned/no-thp/tuned.conf
+	$sh_c "install -d /etc/tuned/no-thp/"
+	$sh_c cat <<-EOF > /etc/tuned/no-thp/tuned.conf
 	[main]
 	include=virtual-guest
 
