@@ -20,6 +20,14 @@ get_distribution() {
 	echo "$lsb_dist"
 }
 
+is_dry_run() {
+	if [ -z "$DRY_RUN" ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
 command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
@@ -221,20 +229,20 @@ mongodb() {
 webserver() {
 	echo "Installing WebServer..."
 	$sh_c "$pkg_manager clean all"
-	$sh_c "$pkg_manager makecache"
-	$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel"
-	$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2"
-	$sh_c "$pkg_manager install -y  $remi_repo"
-	$sh_c "$pkg_manager -y  module install php:remi-7.4"
-	$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp}"
-	$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf" 
-	$sh_c "$pkg_manager autoremove -y"
+	$sh_c "$pkg_manager makecache >/dev/null"
+	$sh_c "$pkg_manager install -y  $pre_reqs $pkg_epel >/dev/null"
+	$sh_c "$pkg_manager -y  install httpd mod_ssl mod_http2 >/dev/null"
+	$sh_c "$pkg_manager install -y  $remi_repo >/dev/null"
+	$sh_c "$pkg_manager -y  module install php:remi-7.4 >/dev/null"
+	$sh_c "$pkg_manager -y  install php php-{cli,common,devel,fedora-autoloader.noarch,gd,gmp,json,ldap,mbstring,mcrypt,mysqlnd,opcache,pdo,pear.noarch,pecl-amqp,pecl-ssh2,pecl-zip,process,snmp,xml,pecl-mongodb,pecl-amqp} >/dev/null"
+	$sh_c "sed -i '/mpm_prefork_module/ s/^#//' /etc/httpd/conf.modules.d/00-mpm.conf && sed -i '/mpm_event_module/ s/^/#/g' /etc/httpd/conf.modules.d/00-mpm.conf >/dev/null" 
+	$sh_c "$pkg_manager autoremove -y >/dev/null"
 	$sh_c "rm -f /var/lib/rpm/__db.*"
-	$sh_c "db_verify /var/lib/rpm/Packages"
-	$sh_c "rpm --rebuilddb"
-	$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils"
-	$sh_c 'pear channel-update pear.php.net'
-	$sh_c 'pear install -f Net_Nmap'
+	$sh_c "db_verify /var/lib/rpm/Packages >/dev/null"
+	$sh_c "rpm --rebuilddb >/dev/null"
+	$sh_c "$pkg_manager -y install nmap git composer mariadb net-snmp net-snmp-utils >/dev/null"
+	$sh_c 'pear channel-update pear.php.net >/dev/null'
+	$sh_c 'pear install -f Net_Nmap >/dev/null'
 	if [[ -z $(grep "ixed.7.4.lin" /etc/php.ini) ]]; then
 		$sh_c 'curl -s "http://www.sourceguardian.com/loaders/download.php?php_v=7.4.30&php_ts=0&php_is=8&os_s=Linux&os_r=4.18.0-408.el8.x86_64&os_m=x86_64" -o /usr/lib64/php/modules/ixed.7.4.lin'
 		$sh_c "echo 'extension=ixed.7.4.lin' >> /etc/php.ini"
@@ -254,8 +262,7 @@ mariadb() {
 	gpgcheck=1
 	EOF
 
-	$sh_c "$pkg_manager -y install epel-release" 
-	$sh_c "$pkg_manager -y install MariaDB-server MariaDB-client"
+	$sh_c "$pkg_manager -y install MariaDB-server MariaDB-client >/dev/null"
 }
 
 rabbitmq-server() {
@@ -264,9 +271,9 @@ rabbitmq-server() {
 	curl -1sLf 'https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/setup.rpm.sh' | sudo -E bash
 	curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
 
-	$sh_c "$pkg_manager install socat logrotate -y"
+	$sh_c "$pkg_manager install socat logrotate -y >/dev/null"
 
-	$sh_c "$pkg_manager -y install rabbitmq-server erlang"
+	$sh_c "$pkg_manager -y install rabbitmq-server erlang >/dev/null"
 
 	rabbitmq-plugins enable rabbitmq_management
 }
@@ -427,6 +434,9 @@ do_install() {
 				pkg_epel="https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
 			fi
 			(
+				if ! is_dry_run; then
+					set -x
+				fi
 				if is_wsl; then
 					echo "WSL DETECTED: Installing HTTPD for Windows."
 					webserver
