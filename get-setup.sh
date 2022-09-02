@@ -88,6 +88,7 @@ echo_run_as_nonroot() {
 				sudo $service rabbitmq-server.service
 				rabbitmq-adduser
 				firewall
+				$sh_c "mongo --eval 'db.runCommand({ connectionStatus: 1 })'"
 			fi
 		;;
 	esac
@@ -215,7 +216,6 @@ mongodb() {
 	EOF
 				
 	$sh_c "tuned-adm profile no-thp"
-	$sh_c "mongo --eval 'db.runCommand({ connectionStatus: 1 })'"
 }
 
 webserver() {
