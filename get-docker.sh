@@ -488,6 +488,9 @@ do_install() {
 				pre_reqs="yum-utils"
 				pkg_suffix="el"
 			fi
+		
+				$sh_c "$pkg_manager -y remove podman >/dev/null"
+		
 			(
 				if ! is_dry_run; then
 					set -x
