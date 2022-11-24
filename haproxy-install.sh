@@ -13,7 +13,7 @@ function haproxy() {
 
     Port=3306
     dnf install epel-release -y
-    dnf memchache
+    dnf update -y
     dnf install haproxy -y
     cat >/etc/haproxy/haproxy.cfg <<-'EOF'
     global
