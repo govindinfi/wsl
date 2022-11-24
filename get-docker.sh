@@ -489,7 +489,7 @@ do_install() {
 				pkg_suffix="el"
 			fi
 		
-				$sh_c "$pkg_manager -y remove podman >/dev/null"
+				$sh_c "$pkg_manager -y remove runc >/dev/null"
 		
 			(
 				if ! is_dry_run; then
