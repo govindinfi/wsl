@@ -143,15 +143,15 @@ function keepalived() {
     weight 2
     }
 
-    vrrp_instance VI_${vrrp_instance} {
-        state ${TYPE}
-        priority ${priority}
+    vrrp_instance VI_$vrrp_instance {
+        state $TYPE
+        priority $priority
         advert_int 1
         virtual_router_id 132
         interface bridge0
 
     virtual_ipaddress {
-        ${VIP}
+        $VIP
     }
 
     track_script {
@@ -166,7 +166,6 @@ function keepalived() {
 
     fi
 }
-
 
 haproxy
 radius
