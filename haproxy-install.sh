@@ -125,7 +125,7 @@ function keepalived() {
 
     if [ "$TYPE" == "BACKUP" ]; then
         priority=199
-    elif [ "$TYPE" == 'MASTER' ]; then
+    elif [ "$TYPE" == "MASTER" ]; then
         priority=200
     fi
 
