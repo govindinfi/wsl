@@ -98,9 +98,9 @@ function keepalived() {
     read -p "Server VIP" VIP
     read -p "Server vrrp_instance [both server should be same]" vrrp_instance
 
-    if [ "$TYPE" = "BACKUP"]; then
+    if [ "$TYPE" == "BACKUP"]; then
         priority=199
-    elif [ "$TYPE" = 'MASTER']; then
+    elif [ "$TYPE" == 'MASTER']; then
         priority=200
     fi
 
