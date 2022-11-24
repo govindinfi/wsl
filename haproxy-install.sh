@@ -117,9 +117,9 @@ function keepalived() {
     firewall-cmd --add-protocol=vrrp --permanent
     firewall-cmd --reload
 
-    read -p "Server MASTER/BACKUP" TYPE
-    read -p "Server VIP" VIP
-    read -p "Server vrrp_instance [both server should be same]" vrrp_instance
+    read -p "Server MASTER/BACKUP: " TYPE
+    read -p "Server VIP: " VIP
+    read -p "Server vrrp_instance [both server should be same]: " vrrp_instance
 
     if [ "$TYPE" == "BACKUP"]; then
         priority=199
