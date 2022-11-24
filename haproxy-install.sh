@@ -80,7 +80,7 @@ function radius() {
 
     echo "Radius Server Installation inprocessing..."
     dnf --enablerepo=crb install freeradius freeradius-utils freeradius-mysql freeradius-perl -y
-    dnf install mysqltune -y
+    #dnf install mysqltune -y
     firewall-cmd --add-service=radius --permanent >/dev/null
     firewall-cmd --add-service=mysql --permanent >/dev/null
     firewall-cmd --relaod   
