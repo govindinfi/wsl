@@ -3,6 +3,7 @@
 ####    Govind Kumar
 ####    Used for HaProxy installation
 ####    bash <(curl -sL https://raw.githubusercontent.com/govindinfi/wsl/main/haproxy-install.sh)
+####    govind.kumar@infinitylabs.in
 #################################################
 
 #!/bin/bash
