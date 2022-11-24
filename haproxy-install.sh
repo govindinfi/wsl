@@ -129,38 +129,36 @@ function keepalived() {
         priority=200
     fi
 
-	cat >/etc/keepalived/keepalived.conf <<-'EOT'
-    
-    ! Configuration File for keepalived
-    global_defs {
-        enable_script_security
-        script_user root
-    }
+cat >/etc/keepalived/keepalived.conf <<EOT
+! Configuration File for keepalived
+global_defs {
+    enable_script_security
+    script_user root
+}
 
-    vrrp_script chk_status {
+vrrp_script chk_status {
     script "killall -0 haproxy"
     interval 2
     weight 2
-    }
+}
 
-    vrrp_instance VI_$vrrp_instance {
-        state $TYPE
-        priority $priority
-        advert_int 1
-        virtual_router_id 132
-        interface bridge0
+vrrp_instance VI_$vrrp_instance {
+    state $TYPE
+    priority $priority
+    advert_int 1
+    virtual_router_id 132
+    interface bridge0
 
     virtual_ipaddress {
         $VIP
     }
 
     track_script {
-            chk_status
-        }
-
+    chk_status
     }
+}
 
-	EOT
+EOT
 
     systemctl enable --now keepalived.service
     echo "Keepalived is " $(systemctl is-active haproxy)
