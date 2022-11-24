@@ -56,20 +56,20 @@ defaults
     timeout check           10s
     maxconn                 3000
 frontend stats
-        bind *:8089
-        mode http
-        stats enable
-        stats show-node
-        stats hide-version
-        stats uri /
-        stats refresh 10s
+    bind *:8089
+    mode http
+    stats enable
+    stats show-node
+    stats hide-version
+    stats uri /
+    stats refresh 10s
 
 listen  mariadb_multi
-        bind *:3306
-        # maxconn 200
-        mode tcp
-        option mysql-check user haproxy
-        balance roundrobin
+    bind *:3306
+    # maxconn 200
+    mode tcp
+    option mysql-check user haproxy
+    balance roundrobin
 EOF
 
     echo "Put Mariadb server IP Adress like:- IP1<space>IP2<space>IP3...,etc."
