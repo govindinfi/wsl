@@ -2,6 +2,7 @@
 #################################################
 ####    Govind Kumar
 ####    Used for HaProxy installation
+####    bash <(curl -sL https://raw.githubusercontent.com/govindinfi/wsl/main/haproxy-install.sh)
 #################################################
 
 #!/bin/bash
@@ -9,7 +10,7 @@ set -o pipefail
 
 function haproxy() {
 
-    if [ systemctl is-active haproxy.service == 'active' ]; then
+    if [ $(systemctl is-active haproxy.service) == 'active' ]; then
         
         echo "Haproxy is active"
     
@@ -87,7 +88,7 @@ function haproxy() {
 
 function radius() {
 
-    if [ systemctl is-active radius.service == 'active' ]; then
+    if [ $(systemctl is-active radius.service) == 'active' ]; then
 
         echo "Radius is active"
     else
@@ -104,7 +105,7 @@ function radius() {
 
 function keepalived() {
 
-    if [ systemctl is-active keepalived.service == 'active' ]; then
+    if [ $(systemctl is-active keepalived.service) == 'active' ]; then
     
         echo "Keepalived service is active"
     
