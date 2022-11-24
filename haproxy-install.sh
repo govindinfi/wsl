@@ -8,6 +8,13 @@
 set -o pipefail
 
 function haproxy() {
+
+    if [ systemctl is-active haproxy.service == 'active' ]; then
+        
+        echo "Haproxy is active"
+    
+    else
+
     sudo setenforce 0
     sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
     port=3306
@@ -74,9 +81,16 @@ function haproxy() {
     systemctl daemon-reload
     systemctl enable --now haproxy
     systemctl restart haproxy
+    
+    fi
 }
 
 function radius() {
+
+    if [ systemctl is-active radius.service == 'active' ]; then
+
+        echo "Radius is active"
+    else
 
     echo "Radius Server Installation inprocessing..."
     dnf --enablerepo=crb install freeradius freeradius-utils freeradius-mysql freeradius-perl -y
@@ -84,9 +98,18 @@ function radius() {
     firewall-cmd --add-service=radius --permanent >/dev/null
     firewall-cmd --add-service=mysql --permanent >/dev/null
     firewall-cmd --reload   
+    
+    fi
 }
 
 function keepalived() {
+
+    if [ systemctl is-active keepalived.service == 'active' ]; then
+    
+        echo "Keepalived service is active"
+    
+    else
+
     echo "Keepalived Installation inprocessing..."
 
     echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
@@ -138,6 +161,8 @@ function keepalived() {
 	EOT
 
     systemctl enable --now keepalived.service
+
+    fi
 }
 
 
