@@ -5,14 +5,13 @@
 #################################################
 
 #!/bin/bash
-set -e
-Port=3306
-read ip
+set -o pipefail
 
 function haproxy() {
     sudo setenforce 0
     sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
 
+    Port=3306
     dnf install epel-release -y
     dnf update -y
     dnf install haproxy -y
@@ -64,7 +63,7 @@ function haproxy() {
 	EOF
 
     echo "Put Mariadb server IP Adress like:- IP1<space>IP2<space>IP3...,etc."
-
+    read ip
     list=(${ip})
 
     for host in ${list[@]}
