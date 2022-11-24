@@ -6,12 +6,13 @@
 
 #!/bin/bash
 set -e
+Port=3306
+read ip
 
 function haproxy() {
     sudo setenforce 0
     sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
 
-    Port=3306
     dnf install epel-release -y
     dnf update -y
     dnf install haproxy -y
@@ -62,8 +63,8 @@ function haproxy() {
             balance roundrobin
 	EOF
 
-    echo "Put Mariadb server IP Adress like:- IP1<space>IP2<space>IP3...,etc." 
-    read ip
+    echo "Put Mariadb server IP Adress like:- IP1<space>IP2<space>IP3...,etc."
+
     list=(${ip})
 
     for host in ${list[@]}
@@ -85,6 +86,17 @@ function radius() {
     firewall-cmd --add-service=mysql --permanent >/dev/null
     firewall-cmd --relaod   
 }
+
+function keepalivedir() {
+    echo "Keepalived Installation inprocessing..."
+
+	cat >/etc/init/keepalived/keepalived.conf <<-'EOF'
+    
+	EOF
+
+    
+}
+
 
 haproxy
 radius
