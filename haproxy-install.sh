@@ -163,7 +163,7 @@ function keepalived() {
 	EOT
 
     systemctl enable --now keepalived.service
-
+    echo "Keepalived is " $(systemctl is-active haproxy)
     fi
 }
 
