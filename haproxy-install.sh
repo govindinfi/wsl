@@ -10,8 +10,8 @@ set -o pipefail
 function haproxy() {
     sudo setenforce 0
     sudo sed -i 's/permissive/disabled/' /etc/sysconfig/selinux
+    port=3306
 
-    Port=3306
     dnf install epel-release -y
     dnf update -y
     dnf install haproxy -y
@@ -83,19 +83,64 @@ function radius() {
     #dnf install mysqltune -y
     firewall-cmd --add-service=radius --permanent >/dev/null
     firewall-cmd --add-service=mysql --permanent >/dev/null
-    firewall-cmd --relaod   
+    firewall-cmd --reload   
 }
 
-function keepalivedir() {
+function keepalived() {
     echo "Keepalived Installation inprocessing..."
 
-	cat >/etc/init/keepalived/keepalived.conf <<-'EOF'
-    
-	EOF
+    echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+    dnf install keepalived screen -y
+    firewall-cmd --add-protocol=vrrp --permanent
+    firewall-cmd --reload
 
+    read -p "Server MASTER/BACKUP" TYPE
+    read -p "Server VIP" VIP
+    read -p "Server vrrp_instance [both server should be same]" vrrp_instance
+
+    if [ "$TYPE" = "BACKUP"]; then
+        priority=199
+    elif [ "$TYPE" = 'MASTER']; then
+        priority=200
+    fi
+
+	cat >/etc/keepalived/keepalived.conf <<-'EOT'
     
+    ! Configuration File for keepalived
+    global_defs {
+        enable_script_security
+        script_user root
+    }
+
+    vrrp_script chk_status {
+    script "killall -0 haproxy"
+    interval 2
+    weight 2
+    }
+
+    vrrp_instance VI_${vrrp_instance} {
+        state ${TYPE}
+        priority ${priority}
+        advert_int 1
+        virtual_router_id 132
+        interface bridge0
+
+    virtual_ipaddress {
+        ${VIP}
+    }
+
+    track_script {
+            chk_status
+        }
+
+    }
+
+	EOT
+
+    systemctl enable --now keepalived.service
 }
 
 
 haproxy
 radius
+keepalived
