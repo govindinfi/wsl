@@ -162,7 +162,7 @@ EOF
 }
 
 
-function Master(){
+function master(){
 
     comm=$(mysql -u root -p$MARIADB_ROOT_PASSWORD -e "SHOW GLOBAL STATUS LIKE 'wsrep_cluster_size';" | grep wsrep_cluster_size | awk '{print $2}')
 
@@ -226,8 +226,8 @@ if [[ -n "${@}" ]]; then
         $@
 else 
     echo "Run below command for install Mariadb cluster"
-    echo  ${0##*/} Master
-    echo ${0##*/} Nodes
+    echo  ${0##*/} master
+    echo ${0##*/} nodes
 fi
 
 
