@@ -197,6 +197,14 @@ function nodes(){
 
     echo 'Nodes setup inprogress...'
 
+    comm=$(mysql -u root -p$MARIADB_ROOT_PASSWORD -e "SHOW GLOBAL STATUS LIKE 'wsrep_cluster_size';" | grep wsrep_cluster_size | awk '{print $2}')
+
+    if [[ -n "${comm}" ]]; then
+
+        echo -e "${G}Maiadb cluster already running${C} ${wsrep_cluster_address}, Total cluster nodes count is: ${R}${comm}${C}"
+        exit
+    else
+
     mariadb_server_galera
     galera_config_node
     mariadb_config
@@ -219,6 +227,7 @@ function nodes(){
        echo "Failed to add node!"
 
     fi
+ fi
 
 }
 
