@@ -48,7 +48,7 @@ function galera_config_master(){
     #Galera configuration
     echo "Galera configuring...."
     sed -i 's/"my_wsrep_cluster"/'${cluster_name}'/' ${galerafile}
-    sed -i 's/"wsrep_on=0"/"wsrep_on=ON"/' ${galerafile}
+    sed -i 's/wsrep_on=0/wsrep_on=ON/' ${galerafile}
     sed -i 's/#wsrep_provider_options=/wsrep_provider_options="gcache.size=2G;gcs.fc_limit=128"/' ${galerafile}
     sed -i 's/"wsrep_slave_threads=1"/"wsrep_slave_threads=48"/' ${galerafile}
 
@@ -72,7 +72,7 @@ function galera_config_node(){
     #Galera configuration
     echo "Galera configuring...."
     sed -i 's/"my_wsrep_cluster"/'${cluster_name}'/' ${galerafile}
-    sed -i 's/"wsrep_on=0"/"wsrep_on=ON"/' ${galerafile}
+    sed -i 's/wsrep_on=0/wsrep_on=ON/' ${galerafile}
     sed -i 's/#wsrep_provider_options=/wsrep_provider_options="gcache.size=2G;gcs.fc_limit=128"/' ${galerafile}
 
     echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3."
