@@ -170,7 +170,7 @@ function master(){
     if [[ -n "${comm}" ]]; then
 
         echo -e "${G}Maiadb cluster already running${C} ${wsrep_cluster_address}, Total cluster nodes count is: ${R}${comm}${C}"
-        break
+        exit
     else
         #Galera cluster setup
 
