@@ -57,7 +57,7 @@ function galera_config(){
 
     echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3...,etc."
     read nodes
-    str="${nodes//    /,}"
+    str="${nodes//      /,}"
     echo $str
 
     if [ "$nodes" != '' ]; then
