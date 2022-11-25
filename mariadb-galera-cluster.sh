@@ -82,7 +82,7 @@ function galera_config_node(){
     read -p "Put Mariadb Node IP HostName: " wsrep_node_name
     
     if [ "$wsrep_cluster_address" != '' ]; then
-        echo "wsrep_cluster_address="gcomm://${nodes},${wsrep_cluster_address}"" | tee -a ${galerafile}
+        echo "wsrep_cluster_address="gcomm://${nodes}"" | tee -a ${galerafile}
         echo "wsrep_node_name="${wsrep_node_name}"" | tee -a ${galerafile}
         echo "wsrep_node_address="${node_address}"" | tee -a ${galerafile}
     else 
