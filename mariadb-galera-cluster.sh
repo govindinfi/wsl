@@ -19,6 +19,7 @@ Y='\033[0;33m'
 
 export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 galerafile='/etc/my.cnf.d/galera.cnf'
+cluster_name=go_cluster
 
 function mariadb_server_galera(){
 
