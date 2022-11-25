@@ -20,6 +20,8 @@ Y='\033[0;33m'
 export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 galerafile='/etc/my.cnf.d/galera.cnf'
 cluster_name=go_cluster
+HOST_IP=$(ip route get 1 | sed 's/^.*src \([^ ]*\).*$/\1/;q')
+HOST_NAME=$(hostname -f)
 
 function mariadb_server_galera(){
 
@@ -45,7 +47,7 @@ function firewall(){
     sudo firewall-cmd --reload &>/dev/null
 }
 
-function galera_config_master(){
+function galera_config(){
     #Galera configuration
     echo "Galera configuring...."
     sed -i 's/"my_wsrep_cluster"/'${cluster_name}'/' ${galerafile}
@@ -55,16 +57,17 @@ function galera_config_master(){
 
     echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3...,etc."
     read nodes
-    read -p "Put Mariadb Master IP Adress: " wsrep_cluster_address
-    read -p "Put Mariadb Master IP HostName: " wsrep_master_name
+    str="${nodes// /,}"
 
-    if [ "$wsrep_cluster_address" != '' ]; then
-        echo "wsrep_cluster_address="gcomm://${wsrep_cluster_address},${nodes}"" | tee -a ${galerafile}
-        echo "wsrep_node_address="${wsrep_cluster_address}"" | tee -a ${galerafile}
-        echo "wsrep_node_name="${wsrep_master_name}"" | tee -a ${galerafile}
+    echo $str
+
+    if [ "$nodes" != '' ]; then
+        echo "wsrep_cluster_address="gcomm://${HOST_IP},${str}"" | tee -a ${galerafile}
+        echo "wsrep_node_address="${HOST_IP}"" | tee -a ${galerafile}
+        echo "wsrep_node_name="${HOST_NAME}"" | tee -a ${galerafile}
     else 
         echo Please provide required input
-        exit 
+        exit
     fi
 
 }
@@ -81,7 +84,7 @@ function galera_config_node(){
     read -p "Put Mariadb Node IP Adress: " node_address
     read -p "Put Mariadb Node IP HostName: " wsrep_node_name
     
-    if [ "$wsrep_cluster_address" != '' ]; then
+    if [ "$nodes" != '' ]; then
         echo "wsrep_cluster_address="gcomm://${nodes}"" | tee -a ${galerafile}
         echo "wsrep_node_name="${wsrep_node_name}"" | tee -a ${galerafile}
         echo "wsrep_node_address="${node_address}"" | tee -a ${galerafile}
@@ -175,7 +178,7 @@ function master(){
         #Galera cluster setup
 
         mariadb_server_galera
-        galera_config_master
+        galera_config
         mariadb_config
 
         sudo galera_new_cluster
@@ -206,7 +209,7 @@ function nodes(){
     else
 
     mariadb_server_galera
-    galera_config_node
+    galera_config
     mariadb_config
 
     if [ -d "/var/lib/mysql" ]; then
