@@ -10,7 +10,7 @@
 # of this license document, but changing it is not allowed.             #
 #                                                                       #
 #########################################################################
-set -ex
+set -o pipefail
 
 C='\033[0m'
 R='\033[0;31m'
