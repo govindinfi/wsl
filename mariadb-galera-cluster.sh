@@ -57,8 +57,7 @@ function galera_config(){
 
     echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3...,etc."
     read nodes
-    str="${S//    /,}"
-
+    str="${nodes//    /,}"
     echo $str
 
     if [ "$nodes" != '' ]; then
@@ -68,29 +67,6 @@ function galera_config(){
     else 
         echo Please provide required input
         exit
-    fi
-
-}
-
-function galera_config_node(){
-    #Galera configuration
-    echo "Galera configuring...."
-    sed -i 's/"my_wsrep_cluster"/'${cluster_name}'/' ${galerafile}
-    sed -i 's/wsrep_on=0/wsrep_on=ON/' ${galerafile}
-    sed -i 's/#wsrep_provider_options=/wsrep_provider_options="gcache.size=2G;gcs.fc_limit=128"/' ${galerafile}
-
-    echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3."
-    read nodes
-    read -p "Put Mariadb Node IP Adress: " node_address
-    read -p "Put Mariadb Node IP HostName: " wsrep_node_name
-    
-    if [ "$nodes" != '' ]; then
-        echo "wsrep_cluster_address="gcomm://${nodes}"" | tee -a ${galerafile}
-        echo "wsrep_node_name="${wsrep_node_name}"" | tee -a ${galerafile}
-        echo "wsrep_node_address="${node_address}"" | tee -a ${galerafile}
-    else 
-        echo Please provide required input
-        exit 
     fi
 
 }
