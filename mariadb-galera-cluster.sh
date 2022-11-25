@@ -57,8 +57,7 @@ function galera_config(){
 
     echo "Put Mariadb nodes IP Adress like:- IP1,IP2,IP3...,etc."
     read nodes
-    str="${nodes//      /,}"
-    Str="${str//        /,}"
+    Str=$(echo $nodes | sed "s/ /,/g")
 
     if [ "$nodes" != '' ]; then
         echo "wsrep_cluster_address="gcomm://${Str}"" | tee -a ${galerafile}
