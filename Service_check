@@ -21,6 +21,8 @@ EOF
 
 read -p "Enter Service Name: " service
 
+S=$service
+
 cat >/opt/service_check.sh <<'EOT'
 #!/usr/bin/env bash
 # -----------------------------------------------------------
@@ -29,7 +31,7 @@ cat >/opt/service_check.sh <<'EOT'
 # -----------------------------------------------------------
 
 # declare serice array
-declare SER=( $service )
+declare SER=( ${S} )
 n=${#SER[*]}
 LOG="/var/log/service_check.log"
 
