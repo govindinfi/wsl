@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+cat > /usr/lib/systemd/system/service_check.service <<EOF
+[Unit]
+# Elk services check script
+# Govind Kumar <govind.kumar@infinitylabs.in>
+Description=My Shell Script
+
+[Service]
+Type=simple
+User=root
+RemainAfterExit=yes
+WorkingDirectory=/opt/
+ExecStart=/usr/bin/bash service_check.sh
+RestartSec=0
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+read -p "Enter Service Name: " service
+
+cat >/opt/service_check.sh <<'EOT'
+#!/usr/bin/env bash
+# -----------------------------------------------------------
+# Script for check services status and manage services
+# Govind Kumar <govind.kumar@infinitylabs.in>
+# -----------------------------------------------------------
+
+# declare serice array
+declare SER=( $service )
+n=${#SER[*]}
+LOG="/var/log/service_check.log"
+
+while true;
+do
+    printf "\n-------------------$(date +"%d-%m-%Y %H:%M:%S")----------------------\n" >> ${LOG}
+
+    for ((i=0; i<n; i++));
+    do
+        check=$(systemctl is-failed "${SER[$i]}")
+
+        if [[ "${check}" != "active" ]]; then
+
+            echo 1 ${CHECK}
+#            systemctl stop ${SER[i]}
+            systemctl reset-failed ${SER[i]}
+            systemctl start ${SER[i]}
+
+            if [ $? -eq 0 ]; then
+                echo "${SER[$i]} service successfully started on $(date +"%d-%m-%Y %H:%M:%S")" >> "$LOG"
+            elif [ $? -ne 0 ]; then
+                echo "${SER[$i]} service failed to start on $(date +"%d-%m-%Y %H:%M:%S")" >> "$LOG"
+            fi
+        else
+            printf "Service ${SER[$i]}\t[OK]\n" >> "$LOG"
+        fi
+    done
+    sleep 10
+done
+EOT
+
+chmod +x /opt/service_check.sh
