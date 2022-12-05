@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# bash <(curl -sL https://raw.githubusercontent.com/govindinfi/wsl/main/Service_check)
 
 cat > /usr/lib/systemd/system/service_check.service <<EOF
 [Unit]
@@ -20,6 +21,8 @@ WantedBy=multi-user.target
 EOF
 
 function mariadb() {
+echo 'Service adding for Mariadb'
+
 cat >/opt/service_check.sh <<'EOT'
 #!/usr/bin/env bash
 # -----------------------------------------------------------
@@ -62,6 +65,7 @@ EOT
 }
 
 function radius() {
+echo 'Service adding for Radius'
 cat >/opt/service_check.sh <<'EOT'
 #!/usr/bin/env bash
 # -----------------------------------------------------------
@@ -103,16 +107,18 @@ done
 EOT
 }
 
-read -p "Service Type like mariadb or radius " S
-case $S in
-    maraidb|mysql)
+read -p "Service Type like mariadb or radius " i
+case $i in 
+    mariadb|mysql)
+
     mariadb
     ;;
     radius|haproxy|keepalived)
+
     radius
     ;;
     *)
-    echo 'Error...' 
+    echo "unknown"
     ;;
 esac
 
