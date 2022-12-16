@@ -197,7 +197,7 @@ do
     sleep 10
 done
 EOT
-sed -i "s/SERR/$str/g" service_check.sh
+sed -i "s/SERR/$str/g" /opt/service_check.sh
 }
 
 read -p "Service Type like mariadb or radius or custom " i
