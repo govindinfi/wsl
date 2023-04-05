@@ -4,7 +4,6 @@
 # Set the GRUB2 password 
 # ----------------------------------------------------------------
 set physical
-
 echo "Setting GRUB2 password..."
 grub2-mkpasswd-pbkdf2 | tee /tmp/grub.pbkdf2.sha512
 echo "set superusers=\"root\"" >> /etc/grub.d/40_custom
